@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { getPokemonById } from '../api/pokeApi'
+import { getPokemonById, getPokemonSpeciesById, getMoves } from '../api/pokeApi'
 
 import Card from './Card'
 
@@ -8,38 +8,65 @@ const CardView = props => {
   const [pokemon, setPokemon] = useState({})
   const [loading, setLoading] = useState(true)
   
-  const getPokemon = useCallback(async () => {
-    const pokemonRaw = await getPokemonById(3)
+  const getPokemon = useCallback(async pokemonId => {
+    const pokemonRaw = await getPokemonById(pokemonId)
+    const pokemonSpeciesRaw = await getPokemonSpeciesById(pokemonId)
     const { name, height, weight, sprites, types, moves } = pokemonRaw
-    // TODO { generation, evolvedFrom, flavorText }
+    const { 
+      evolves_from_species, 
+      generation, 
+      flavor_text_entries 
+    } = pokemonSpeciesRaw
     
     const processTypes = () => (types.map(type => type.type.name))
 
-    const processMoves = () => {
-      // show first 10 moves
-      const numberOfMoves = 10
-      return moves.slice(0, numberOfMoves)
-      // TODO sort moves by powerpoints
+    const processMoves = async () => {
+      const movesToShow = 10 // show first 10 moves
+      const moveUrls = moves.slice(0, movesToShow).map(move => move.move.url)
+      const movesResult = await getMoves(moveUrls)
+      
+      const groupByPP = moves => {
+        return moves.reduce((result, currentMove) => {
+          result[currentMove.pp] = result[currentMove.pp] || []
+          result[currentMove.pp].push(currentMove.name)
+          return result
+        }, {})
+      }
+      
+      return groupByPP(movesResult)
     }
-    
+
+    const processFlavourText = () => {
+      const englishFlavorText = flavor_text_entries.filter(
+        entry => entry.language.name === 'en'
+      )
+
+      const randomValue = array => {
+        const randomIndex = Math.floor(Math.random() * array.length)
+        return array[randomIndex]
+      }
+
+      return randomValue(englishFlavorText).flavor_text
+    }
+
     const pokemon = {
       name,
-      evolvedFrom: 'evolvedFrom',
-      generation: 'generation',
+      evolvesFrom: evolves_from_species ? evolves_from_species.name : null,
+      generation: generation.name,
       image: sprites.front_default,
       height,
       weight,
       types: processTypes(),
-      moves: processMoves(),
-      flavourText: 'Cool flavour text here',
+      moves: await processMoves(),
+      flavourText: processFlavourText(),
     }
-    console.log(pokemon)
+
     setPokemon(pokemon)
     setLoading(false)
   }, [])
   
   useEffect(() => {
-    getPokemon()
+    getPokemon(65)
   }, [getPokemon])
 
   return (

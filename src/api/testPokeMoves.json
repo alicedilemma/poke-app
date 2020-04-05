@@ -1,0 +1,42 @@
+[
+    {
+        "name": "razor-wind",
+        "pp": 10
+    },
+    {
+        "name": "gust",
+        "pp": 35
+    },
+    {
+        "name": "whirlwind",
+        "pp": 20
+    },
+    {
+        "name": "take-down",
+        "pp": 20
+    },
+    {
+        "name": "double-edge",
+        "pp": 15
+    },
+    {
+        "name": "supersonic",
+        "pp": 20
+    },
+    {
+        "name": "psybeam",
+        "pp": 20
+    },
+    {
+        "name": "hyper-beam",
+        "pp": 5
+    },
+    {
+        "name": "mega-drain",
+        "pp": 15
+    },
+    {
+        "name": "solar-beam",
+        "pp": 10
+    }
+]

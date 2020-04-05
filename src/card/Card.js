@@ -3,7 +3,7 @@ import React from 'react'
 const Card = ({ pokemon, loading }) => {
   const { 
     name,
-    evolvedFrom,
+    evolvesFrom,
     generation,
     image,
     height,
@@ -13,26 +13,24 @@ const Card = ({ pokemon, loading }) => {
     flavourText
   } = pokemon || {}
 
-  const getTypes =() => {
-    if (types) {
-      return types.map(type => <span key={type}>{type},</span>)
-    }
+  const makeList = arrayOfStrings => {
+    return arrayOfStrings.join(', ')
   }
   
   const getMoves = () => {
-    if (moves) {
-      return moves.map(move => <ul key={move.move.name}>{move.move.name},</ul>)
-    }
+    return Object.keys(moves).map(
+      pp => <ul key={pp}>{pp}: {makeList(moves[pp])}</ul>
+    )
   }
   
   return (
     loading ? (
       <p>loading...</p>
-    ) :
-      (<div>
+    ) : (
+      <div>
         <header>
           <h1>
-            {`${name} (evolves from ${evolvedFrom})`}
+            {`${name} (evolves from ${evolvesFrom})`}
           </h1>
           <h1>
             {generation}
@@ -42,7 +40,7 @@ const Card = ({ pokemon, loading }) => {
         <p>height: {height}</p>
         <p>weight: {weight}</p>
         <p>
-          {getTypes()}
+          {makeList(types)}
         </p>
         <p> {flavourText}</p>
         <ul>
