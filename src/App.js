@@ -1,14 +1,10 @@
 import React from 'react'
 
+import CardView from './card/CardView'
+
 const App = () => {
   return (
-    <div>
-      <header>
-        <h1>
-          Poke app
-        </h1>
-      </header>
-    </div>
+    <CardView />
   )
 }
 
