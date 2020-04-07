@@ -1,10 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import styled from 'styled-components'
 
 import { getPokemonById, getPokemonSpeciesById, getMoves } from '../api/pokeApi'
 
 import Card from './Card'
 
+const Buttons = styled.div`
+  margin: auto;
+  width:  50%;
+  text-align: center;
+  button {
+    margin: 0 10px;
+  }
+`
+
 const CardView = props => {
+  const [pokemonId, setPokemonId] = useState(1)
   const [pokemon, setPokemon] = useState({})
   const [loading, setLoading] = useState(true)
   
@@ -66,11 +77,32 @@ const CardView = props => {
   }, [])
   
   useEffect(() => {
-    getPokemon(65)
-  }, [getPokemon])
+    getPokemon(pokemonId)
+  }, [pokemonId, getPokemon])
+
+  const handleChangePokemon = newId => {
+    if (newId < 1) {
+      newId = 151
+    }
+    if (newId > 151) {
+      newId = 1
+    }
+    setLoading(true)
+    setPokemonId(newId)
+  }
 
   return (
-    <Card pokemon={pokemon} loading={loading} />
+    <>
+      <Buttons>
+        <button onClick={() => handleChangePokemon(pokemonId - 1)}>
+        &lt;= prev pokemon
+        </button>
+        <button onClick={() => handleChangePokemon(pokemonId + 1)}>
+        next pokemon =&gt;
+        </button>
+      </Buttons>
+      <Card pokemon={pokemon} loading={loading} />
+    </>
   )
 }
 
