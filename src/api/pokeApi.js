@@ -4,7 +4,7 @@ import testPoke from './testPoke.json'
 import testPokeSpecies from './testPokeSpecies.json'
 import testPokeMoves from './testPokeMoves.json'
 
-const useTestData = true // use test data to limit api calls
+const useTestData = false // use test data to limit api calls
 const baseUrl = 'https://pokeapi.co/api/v2'
 
 export const getPokemonById = async id => {
