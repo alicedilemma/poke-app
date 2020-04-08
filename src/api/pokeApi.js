@@ -21,7 +21,7 @@ export const getPokemonById = async id => {
     ]
     const responses = await Promise.all(requests)
     const data = responses
-      .map(response => response?.data)
+      .map(response => response && response.data)
       .reduce((result, currentValue) => ({ ...result, ...currentValue }), {})
     return data
   } catch (error) {
@@ -37,7 +37,7 @@ export const getMoves = async urls => {
     const requests = urls.map(url => axios.get(url))
     const responses = await Promise.all(requests)
     return responses.map(response => {
-      const { name, pp } = response?.data
+      const { name, pp } = response && response.data
       return { name, pp }
     })
   } catch (error) {
