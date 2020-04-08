@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const pokeBallUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'
@@ -124,6 +125,21 @@ const Card = ({ pokemon, loading }) => {
         </>
       )}
     </CardContainer>)
+}
+
+Card.propTypes = {
+  pokemon: PropTypes.shape({
+    name: PropTypes.string,
+    evolvesFrom: PropTypes.string,
+    generation: PropTypes.string,
+    image: PropTypes.string,
+    height: PropTypes.number,
+    weight: PropTypes.number,
+    types: PropTypes.array,
+    moves: PropTypes.object,
+    flavourText: PropTypes.string,
+  }),
+  loading: PropTypes.bool,
 }
 
 export default Card
