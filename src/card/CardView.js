@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
-import { getPokemonById, getPokemonSpeciesById, getMoves } from '../api/pokeApi'
+import { getPokemonById, getMoves } from '../api/pokeApi'
 
 import Card from './Card'
 
@@ -21,13 +21,17 @@ const CardView = props => {
   
   const getPokemon = useCallback(async pokemonId => {
     const pokemonRaw = await getPokemonById(pokemonId)
-    const pokemonSpeciesRaw = await getPokemonSpeciesById(pokemonId)
-    const { name, height, weight, sprites, types, moves } = pokemonRaw
     const { 
+      name,
+      height,
+      weight,
+      sprites,
+      types,
+      moves,
       evolves_from_species, 
       generation, 
       flavor_text_entries 
-    } = pokemonSpeciesRaw
+    } = pokemonRaw
     
     const processTypes = () => (types.map(type => type.type.name))
 

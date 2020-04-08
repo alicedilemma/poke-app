@@ -9,23 +9,21 @@ const baseUrl = 'https://pokeapi.co/api/v2'
 
 export const getPokemonById = async id => {
   if (useTestData) {
-    return testPoke
+    return {
+      ...testPoke,
+      ...testPokeSpecies,
+    }
   }
   try {
-    const response = await axios(`${baseUrl}/pokemon/${id}`)
-    return response?.data
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-export const getPokemonSpeciesById = async id => {
-  if (useTestData) {
-    return testPokeSpecies
-  }
-  try {
-    const response = await axios(`${baseUrl}/pokemon-species/${id}`)
-    return response?.data
+    const requests = [
+      axios.get(`${baseUrl}/pokemon/${id}`),
+      axios.get(`${baseUrl}/pokemon-species/${id}`)
+    ]
+    const responses = await Promise.all(requests)
+    const data = responses
+      .map(response => response?.data)
+      .reduce((result, currentValue) => ({ ...result, ...currentValue }), {})
+    return data
   } catch (error) {
     console.error(error)
   }
