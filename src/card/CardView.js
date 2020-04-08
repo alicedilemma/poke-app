@@ -52,7 +52,11 @@ const CardView = props => {
         return array[randomIndex]
       }
 
-      return randomValue(englishFlavorText).flavor_text
+      const removeLineBreaks = string => string.replace(/[\n\r]/g, ' ')
+      
+      // display random flavor text from English entries
+      const randomText = randomValue(englishFlavorText).flavor_text
+      return removeLineBreaks(randomText)
     }
 
     const pokemon = {
