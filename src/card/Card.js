@@ -93,7 +93,7 @@ const Pokeball = styled.img`
   }
 `
 
-const Card = ({ pokemon, loading }) => {
+const Card = ({ pokemon, loading, error }) => {
   const {
     name,
     evolvesFrom,
@@ -116,10 +116,48 @@ const Card = ({ pokemon, loading }) => {
     )
   }
 
+  const getContent = () => {
+    if (loading) {
+      return (
+        <Loading>
+          <Pokeball
+            alt="Poke-ball"
+            src={pokeBallUrl}
+          />
+          <p>Loading...</p>
+        </Loading>
+      )
+    }
+    if (error) {
+      return (
+        <Loading>
+          <p>Uh oh, something went wrong...</p>
+        </Loading>
+      )
+    }
+    return (
+      <>
+        <Stats>
+          <p>Height: {height}</p>
+          <p>Weight: {weight}</p>
+        </Stats>
+        <Types>
+          <p>
+            {makeList(types)}
+          </p>
+        </Types>
+        <p><i>{flavourText}</i></p>
+        <ul>
+          {getMoves()}
+        </ul>
+      </>
+    )
+  }
+
   return (
     <CardContainer>
       <TopHalf>
-        {!loading &&
+        {!loading && !error &&
           <>
             <Heading>
               <h1>
@@ -141,31 +179,7 @@ const Card = ({ pokemon, loading }) => {
         }
       </TopHalf>
       <BottomHalf>
-        {loading ? (
-          <Loading>
-            <Pokeball
-              alt="Poke-ball"
-              src={pokeBallUrl}
-            />
-            <p>Loading...</p>
-          </Loading>
-        ) : (
-          <>
-            <Stats>
-              <p>Height: {height}</p>
-              <p>Weight: {weight}</p>
-            </Stats>
-            <Types>
-              <p>
-                {makeList(types)}
-              </p>
-            </Types>
-            <p><i>{flavourText}</i></p>
-            <ul>
-              {getMoves()}
-            </ul>
-          </>
-        )}
+        {getContent()}
       </BottomHalf>
     </CardContainer>)
 }
@@ -183,6 +197,7 @@ Card.propTypes = {
     flavourText: PropTypes.string,
   }),
   loading: PropTypes.bool,
+  error: PropTypes.bool,
 }
 
 export default Card
