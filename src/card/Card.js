@@ -6,23 +6,47 @@ const pokeBallUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sp
 
 const CardContainer = styled.div`
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
-  border-radius: 8px;
+  border-radius: 16px;
   width: 312px;
-  min-height: 400px;
-  margin: 20px auto;
+  margin: auto;
+`
+
+const TopHalf = styled.div`
+  background-color: #69b9e3;
+  height: 200px;
+  padding: 0 10px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+`
+
+const BottomHalf = styled.div`
+  background-color: #fff;
+  margin-top: -30px;
+  padding: 30px 15px 15px 15px;
+  border-radius: 8px 8px 16px 16px;
+  min-height: 300px;
 `
 
 const Heading = styled.div`
   width: 100%;
+  height: 50px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  color: #fff;
+`
+
+const SubHeading = styled.div`
+  width: 100%;
+  height: 50px;
+  color: #fff;
+  p {
+    margin-top: 0;
+  }
 `
 
 const Name = styled.span`
@@ -31,8 +55,6 @@ const Name = styled.span`
 
 const Image = styled.img`
   height: 150px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
-  border-radius: 8px;
 `
 
 const Stats = styled.div`
@@ -52,20 +74,27 @@ const Loading = styled.div`
 `
 
 const Pokeball = styled.img`
-  height: 200%;
-  animation-name: floating;
-  animation-duration: 3s;
+  height: 50px;
+  animation-name: spin;
+  animation-duration: 1000ms;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  @keyframes floating {
-    from { transform: translate(0,  0px); }
-    65%  { transform: translate(0, 15px); }
-    to   { transform: translate(0, -0px); }    
+  animation-timing-function: linear;
+  @-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+  }
+  @-webkit-keyframes spin {
+      from { -webkit-transform: rotate(0deg); }
+      to { -webkit-transform: rotate(360deg); }
+  }
+  @keyframes spin {
+      from {transform:rotate(0deg);}
+      to {transform:rotate(360deg);}
   }
 `
 
 const Card = ({ pokemon, loading }) => {
-  const { 
+  const {
     name,
     evolvesFrom,
     generation,
@@ -80,7 +109,7 @@ const Card = ({ pokemon, loading }) => {
   const makeList = arrayOfStrings => {
     return arrayOfStrings.join(', ')
   }
-  
+
   const getMoves = () => {
     return Object.keys(moves).map(
       pp => <li key={pp}>{pp}: {makeList(moves[pp])}</li>
@@ -89,41 +118,55 @@ const Card = ({ pokemon, loading }) => {
 
   return (
     <CardContainer>
-      {loading ? (
-        <Loading>
-          <Pokeball 
-            alt="Poke-ball" 
-            src={pokeBallUrl}
-          />
-          <p>Loading...</p>
-        </Loading>
-      ) : (
-        <>
-          <Heading>
-            <h1>
-              <Name>{name}</Name>
-              {evolvesFrom && `(evolves from ${evolvesFrom})`}
-            </h1>
-            <p>
-              <Name>{generation}</Name>
-            </p>
-          </Heading>
-          <Image alt={`A forward facing ${name}`} src={image} />
-          <Stats>
-            <p>Height: {height}</p>
-            <p>Weight: {weight}</p>
-          </Stats>
-          <Types>
-            <p>
-              {makeList(types)}
-            </p>
-          </Types>
-          <p><i>{flavourText}</i></p>
-          <ul>
-            {getMoves()}
-          </ul>
-        </>
-      )}
+      <TopHalf>
+        {!loading &&
+          <>
+            <Heading>
+              <h1>
+                <Name>{name}</Name>
+              </h1>
+              <p>
+                <Name>{generation}</Name>
+              </p>
+            </Heading>
+            <SubHeading>
+              {evolvesFrom &&
+                <p>
+                  (evolves from <Name>{evolvesFrom}</Name>)
+                </p>
+              }
+            </SubHeading>
+            <Image alt={`A forward facing ${name}`} src={image} />
+          </>
+        }
+      </TopHalf>
+      <BottomHalf>
+        {loading ? (
+          <Loading>
+            <Pokeball
+              alt="Poke-ball"
+              src={pokeBallUrl}
+            />
+            <p>Loading...</p>
+          </Loading>
+        ) : (
+          <>
+            <Stats>
+              <p>Height: {height}</p>
+              <p>Weight: {weight}</p>
+            </Stats>
+            <Types>
+              <p>
+                {makeList(types)}
+              </p>
+            </Types>
+            <p><i>{flavourText}</i></p>
+            <ul>
+              {getMoves()}
+            </ul>
+          </>
+        )}
+      </BottomHalf>
     </CardContainer>)
 }
 

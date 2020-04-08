@@ -3,11 +3,15 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const Container = styled.div`
-  margin: auto;
-  width:  50%;
-  text-align: center;
+  height 50px;
+  width:  100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   button {
     margin: 0 10px;
+    border-radius: 5px;
+    background-color: white;
   }
 `
 
